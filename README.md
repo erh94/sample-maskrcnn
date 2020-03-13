@@ -9,6 +9,8 @@ Pytorch 1.4 Cuda 10
 ````sh
 conda create --name maskrcnn -y
 conda activate maskrcnn
+conda install ipython pip
+pip install ninja yacs cython matplotlib tqdm opencv-python
 ````
 
 ````sh
