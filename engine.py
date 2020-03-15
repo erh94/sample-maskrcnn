@@ -10,9 +10,9 @@ from coco_eval import CocoEvaluator
 import utils
 
 
-def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
+def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq,writer):
     model.train()
-    metric_logger = utils.MetricLogger(delimiter="  ")
+    metric_logger = utils.MetricLogger(delimiter=",  ")
     metric_logger.add_meter('lr', utils.SmoothedValue(window_size=1, fmt='{value:.6f}'))
     header = 'Epoch: [{}]'.format(epoch)
 
@@ -23,6 +23,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         lr_scheduler = utils.warmup_lr_scheduler(optimizer, warmup_iters, warmup_factor)
 
+    i = 0
     for images, targets in metric_logger.log_every(data_loader, print_freq, header):
         images = list(image.to(device) for image in images)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
@@ -31,6 +32,7 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         losses = sum(loss for loss in loss_dict.values())
 
+        i = ((i+1) % (len(data_loader)+1))
         # reduce losses over all GPUs for logging purposes
         loss_dict_reduced = utils.reduce_dict(loss_dict)
         losses_reduced = sum(loss for loss in loss_dict_reduced.values())
@@ -48,6 +50,11 @@ def train_one_epoch(model, optimizer, data_loader, device, epoch, print_freq):
 
         if lr_scheduler is not None:
             lr_scheduler.step()
+
+        for name,value in zip(loss_dict.keys(),loss_dict.values()):
+            #print(name,value.item(), (epoch*print_freq) + i)
+            #print(((epoch)*len(data_loader)) + i)
+            writer.add_scalar(name,value.item(),(epoch*len(data_loader)) + i )
 
         metric_logger.update(loss=losses_reduced, **loss_dict_reduced)
         metric_logger.update(lr=optimizer.param_groups[0]["lr"])
