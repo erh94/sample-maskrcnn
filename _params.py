@@ -20,9 +20,9 @@ class DefaultParams():
         self.distributed = False
 
 
-        self.pretrained  = False 
+        self.pretrained  = True 
         
-        self.dataset_root = 'PennFudanPed-pretrained'
+        self.dataset_root = 'PennFudanPed'
 
         self.train_dir = '/home1/SharedFolder/dataset/train/'
         self.train_csv = '/home1/SharedFolder/dataset/train/old_csvs/train_modified.csv'
@@ -35,12 +35,15 @@ class DefaultParams():
         self.exp_name = f'maskrcnn-{self.dataset_root}'
         
         self.model_dir = f'./models/{self.exp_name}/{self.timestamp}/'
-        os.makedirs(self.model_dir, exist_ok=True)
+        #os.makedirs(self.model_dir, exist_ok=True)
+        
+        self.results_dir = f'./results/{self.exp_name}/{self.timestamp}/'
+        #os.makedirs(self.results_dir,exist_ok=True)
 
         self.num_epochs = 11
 
         self.hidden_layer = 256
 
-        self.num_classes = 6
+        self.num_classes = 7
 
 hparams = DefaultParams()

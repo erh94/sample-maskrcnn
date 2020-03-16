@@ -32,12 +32,12 @@ class MalariaDataset(object):
         self.transforms = transforms
         self.csv_path = csvpath
         self.classes = {
-            'ring':0,
-            'trophozoite':1,
-            'gametocyte':2,
-            'schizont':3,
-            'difficult':4,
-            'leukocyte':5,
+            'ring':1,
+            'trophozoite':2,
+            'gametocyte':3,
+            'schizont':4,
+            'difficult':5,
+            'leukocyte':6,
         }
 
     def __len__(self):
